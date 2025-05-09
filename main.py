@@ -1,40 +1,23 @@
-import cv2
-import nltk
-from nltk.tokenize import sent_tokenize
-from diffusers import StableDiffusionPipeline
-import torch
+from flask import Flask, request, send_from_directory, jsonify
+import os
 
-# -------- 1. تحميل الصورة --------
-image_path = "input.jpg"
-image = cv2.imread(image_path)
-if image is None:
-    print("خطأ: لم يتم تحميل الصورة.")
-    exit()
+app = Flask(__name__, static_folder='.')
 
-# -------- 2. قراءة النص --------
-text_path = "story.txt"
-with open(text_path, "r", encoding="utf-8") as f:
-    story = f.read()
+@app.route('/')
+def index():
+    return send_from_directory('.', 'index.html')
 
-# -------- 3. تحليل النص وتحويله لمشاهد --------
-nltk.download('punkt')
-sentences = sent_tokenize(story)
-scenes = []
-for sentence in sentences:
-    scenes.append(sentence.strip())
+@app.route('/<path:path>')
+def static_files(path):
+    return send_from_directory('.', path)
 
-# -------- 4. توليد الصور من النصوص --------
-model_id = "CompVis/stable-diffusion-v1-4"
-pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)
-pipe.to("cuda")
+@app.route('/submit', methods=['POST'])
+def submit():
+    data = request.get_json()
+    # هنا تقدر تبعت البيانات لجوجل شيت أو تعالجها بأي شكل
+    print(data)
+    return jsonify({"status": "received"})
 
-images = []
-for scene in scenes:
-    image = pipe(scene).images[0]
-    images.append(image)
-
-# -------- 5. حفظ الصور --------
-for i, image in enumerate(images):
-    image.save(f"scene_{i}.jpg")
-
-print("تم توليد الصور بنجاح.")
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
