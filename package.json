@@ -1,0 +1,13 @@
+{
+    "name": "static-site",
+    "version": "1.0.0",
+    "description": "A simple static site",
+    "main": "index.html",
+    "scripts": {
+      "start": "http-server ./ -p 80"
+    },
+    "dependencies": {
+      "http-server": "^14.1.0"
+    }
+  }
+  
