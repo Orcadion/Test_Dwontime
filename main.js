@@ -48,7 +48,7 @@ function sendData() {
   const description = document.getElementById('description').value;
   const date = new Date().toISOString().split('T')[0];
 
-  fetch('https://script.google.com/macros/s/AKfycbyhEP48uMKZBX6xEUH_UQitwRO7L2Y64BTKKMeFo85B/dev', {
+  fetch('https://script.google.com/macros/s/AKfycbwXBdNiVqtpqNGUuyR07mMCa9ahCJSSOvQK5pKR8tKF0mOXg7Wirw_0fJYGAAstP9acug/exec', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
