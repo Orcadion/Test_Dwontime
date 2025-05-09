@@ -1,33 +1,74 @@
-<script>
-  function sendData() {
-    const name = localStorage.getItem('username');
-    const factory = localStorage.getItem('factory');
-    const shift = localStorage.getItem('shift');
-    const downtime = document.getElementById('downtime').value;
-    const issueStart = document.getElementById('issueStart').value;
-    const issueEnd = document.getElementById('issueEnd').value;
-    const description = document.getElementById('description').value;
-    const date = new Date().toISOString().split('T')[0];
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الداون تايم</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-    // إرسال البيانات إلى الخادم (الذي يعمل على Render)
-    fetch('https://script.google.com/macros/s/AKfycbwXBdNiVqtpqNGUuyR07mMCa9ahCJSSOvQK5pKR8tKF0mOXg7Wirw_0fJYGAAstP9acug/exec', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name, factory, shift, date,
-        downtime, issueStart, issueEnd, description
-      })
-    })
-    .then(async res => {
-      const text = await res.text();
-      if (res.ok) {
-        alert('تم الإرسال بنجاح!');
-      } else {
-        alert('فشل في الإرسال: ' + text);
-      }
-    })
-    .catch(err => {
-      alert('حدث خطأ في الإرسال: ' + err.message);
-    });
-  }
-</script>
+  <h1>تسجيل الداون تايم</h1>
+
+  <!-- زر تفعيل/إلغاء الوضع الداكن -->
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button onclick="toggleDarkMode()">تبديل الوضع الداكن</button>
+  </div>
+
+  <div id="personalInfo" class="section">
+    <label>اسمك ايه</label>
+    <input type="text" id="username">
+
+    <label>مكانك في المصنع</label>
+    <select id="factory">
+      <option>POSA 1</option>
+      <option>POSA 2</option>
+      <option>POSA 3</option>
+      <option>POSA 4</option>
+      <option>POSA 5</option>
+      <option>POSA 6</option>
+      <option>POSA 7</option>
+    </select>
+
+    <label>الشيفت</label>
+    <select id="shift">
+      <option>First</option>
+      <option>Second</option>
+      <option>Third</option>
+    </select>
+
+    <button onclick="saveUserInfo()">التالي</button>
+  </div>
+
+  <div id="mainForm" class="section hidden">
+    <label>وقت بداية الداون تايم</label>
+    <input type="time" id="downtime">
+
+    <label>وقت بداية العطل</label>
+    <input type="time" id="issueStart">
+
+    <label>وقت انتهاء العطل</label>
+    <input type="time" id="issueEnd">
+
+    <label>الوصف</label>
+    <textarea id="description" oninput="handleDescriptionInput()"></textarea>
+
+    <div id="quickButtons">
+      <button onclick="setQuickText('Welding Cut Lead')">Welding Cut Lead</button>
+      <button onclick="setQuickText('Change Probe')">Change Probe</button>
+    </div>
+
+    <button onclick="sendData()">إرسال</button>
+    <button onclick="editUserInfo()">تعديل البيانات</button>
+  </div>
+
+  <script src="main.js"></script>
+  <script>
+    // تفعيل الوضع الداكن/الفاتح
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+  </script>
+
+</body>
+</html>
